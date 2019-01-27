@@ -1,0 +1,89 @@
+{
+	"publisher": "A2K",
+	"name": "hlsl-linter",
+	"displayName": "HLSL linter",
+	"description": "HLSL linter",
+	"version": "0.2.9",
+	"engines": {
+		"vscode": "^1.30.0"
+	},
+	"extensionDependencies": [
+		"slevesque.shader"
+	],
+	"categories": [
+		"Programming Languages",
+		"Linters"
+	],
+	"keywords": [
+		"hlsl",
+		"shader",
+		"linter"
+	],
+	"activationEvents": [
+		"onLanguage:hlsl",
+		"onLanguage:cg"
+	],
+	"main": "./out/extension",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"dependencies": {
+		"@types/tempfile": "^2.0.0",
+		"tempfile": "^2.0.0"
+	},
+	"devDependencies": {
+		"typescript": "^3.1.4",
+		"vscode": "^1.1.25",
+		"tslint": "^5.8.0",
+		"@types/node": "^8.10.25",
+		"@types/mocha": "^2.2.42"
+	},
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "HLSL linter",
+			"properties": {
+				"hlsl.linter.executablePath": {
+					"type": "string",
+					"default": "dxc",
+					"description": "The dxc executable from DirectX Shader Compiler: https://github.com/Microsoft/DirectXShaderCompiler"
+				},
+				"hlsl.linter.trigger": {
+					"type": "string",
+					"enum": [
+						"onSave",
+						"onType",
+						"never"
+					],
+					"default": "onType",
+					"description": "When to automatically run the linter."
+				},
+				"hlsl.linter.includeDirs": {
+					"type": [ "string", "array" ],
+					"items": { 
+						"type": "string"
+					},
+					"default": [
+					],
+					"description": "List of include directories."
+				},
+				"hlsl.linter.defaultArgs": {
+					"type": [ "string", "array" ],
+					"items": { 
+						"type": "string"
+					},
+					"default": [
+						"-T", "lib_6_4",
+						"-Od",
+						"-Ges"
+					],
+					"description": "The dxt executable default arguments."
+				}
+			}
+		}
+	}
+}
