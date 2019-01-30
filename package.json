@@ -3,7 +3,7 @@
 	"name": "hlsl-linter",
 	"displayName": "HLSL linter",
 	"description": "HLSL linter",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"bugs": {
 		"url": "https://github.com/A2K/vscode-hlsl-linter/issues"
 	  },

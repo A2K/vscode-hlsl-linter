@@ -1,5 +1,6 @@
 'use strict';
 
+
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
@@ -400,18 +401,14 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                 });
             }
 
-            /*
-            args.push("-T");
-            args.push("lib_6_4");
-            */
-
             args.push('-I');
             args.push(path.dirname(textDocument.fileName));
 
-            for (var includeDir in this.includeDirs) {
+            
+            this.includeDirs.forEach(includeDir => {
                 args.push("-I");
                 args.push(includeDir);
-            }
+            });
 
             args.push(filename);
 
