@@ -3,7 +3,7 @@
 	"name": "hlsl-linter",
 	"displayName": "HLSL linter",
 	"description": "HLSL linter",
-	"version": "0.3.1",
+	"version": "0.3.3",
 	"bugs": {
 		"url": "https://github.com/A2K/vscode-hlsl-linter/issues"
 	  },
@@ -29,7 +29,8 @@
 	],
 	"activationEvents": [
 		"onLanguage:hlsl",
-		"onLanguage:cg"
+		"onLanguage:cg",
+		"onCommand:hlsl.linter.setifdefs"
 	],
 	"main": "./out/extension",
 	"scripts": {
@@ -51,6 +52,12 @@
 		"@types/mocha": "^2.2.42"
 	},
 	"contributes": {
+		"commands": [
+			{
+				"command": "hlsl.linter.setifdefs",
+				"title": "Set HLSL ifdefs"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "HLSL linter",

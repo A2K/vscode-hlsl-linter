@@ -276,6 +276,8 @@ export default class HLSLLintingProvider implements vscode.Disposable {
 
     private documentListener: vscode.Disposable = { dispose: () => { } };
 
+    private ifdefs: string[] = [];
+
     constructor() {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection();
     }
@@ -290,6 +292,13 @@ export default class HLSLLintingProvider implements vscode.Disposable {
             this.diagnosticCollection.delete(textDocument.uri);
         }, null, subscriptions);
 
+        vscode.workspace.textDocuments.forEach(this.triggerLint, this);
+
+        subscriptions.push(vscode.commands.registerCommand('hlsl.linter.setifdefs', this.setIfdefs.bind(this)));
+    }
+
+    private setIfdefs(ifdefs: string) {
+        this.ifdefs = JSON.parse(ifdefs);
         vscode.workspace.textDocuments.forEach(this.triggerLint, this);
     }
 
@@ -340,6 +349,10 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                 '-Ges' // enable strict mode
             ];
             */
+            this.ifdefs.forEach(ifdef => {
+                args.push('-D');
+                args.push(ifdef);
+            });
 
             const re = /\/\/\s*INPUTS(?:\((\w+)\))?:\s*([^\n]+)\s*\n/g;
             //const re = /\/\/\s*INPUTS:\s*([^\n]+)\s*\n/g;
@@ -428,6 +441,7 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                 if (err) {
                     console.log('error:', err);
                     cleanup();
+                    reject(err);
                     return;
                 }
 
@@ -439,7 +453,7 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                     if (this.executableNotFound) {
                         console.error("DXC executable not found");
                         cleanup();
-                        resolve();
+                        reject("DXC executable not found");
                         return;
                     }
                     var message: string;
@@ -451,7 +465,7 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                     console.log(message);
                     this.executableNotFound = true;
                     cleanup();
-                    resolve();
+                    reject(message);
                 });
                 if (childProcess.pid) {
                     childProcess.stderr.on('data', (data: Buffer) => {
@@ -470,7 +484,7 @@ export default class HLSLLintingProvider implements vscode.Disposable {
                     });
                 } else {
                     cleanup();
-                    resolve();
+                    reject('failed to start DXC');
                 }
             }).bind(this));
         });
@@ -509,7 +523,7 @@ export default class HLSLLintingProvider implements vscode.Disposable {
 
 export function activate(context: vscode.ExtensionContext): void {
     let linter = new HLSLLintingProvider();
-    linter.activate(context.subscriptions);
+    linter.activate(context.subscriptions);    
 }
 
 export function deactivate() { }
