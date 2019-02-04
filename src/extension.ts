@@ -348,6 +348,10 @@ export default class HLSLLintingProvider implements vscode.Disposable {
             let options = vscode.workspace.rootPath ? { cwd: vscode.workspace.rootPath } : undefined;
 
             let args: string[] = Array.from(this.defaultArgs);
+
+            args.push("-D");
+            args.push("VSCODE_HLSL_PREVIEW");
+
             /* [
                 '-Od', // disable optimizations
                 '-Ges' // enable strict mode
