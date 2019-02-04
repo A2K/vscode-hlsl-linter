@@ -3,7 +3,7 @@
 	"name": "hlsl-linter",
 	"displayName": "HLSL linter",
 	"description": "HLSL linter",
-	"version": "0.3.3",
+	"version": "0.3.5",
 	"bugs": {
 		"url": "https://github.com/A2K/vscode-hlsl-linter/issues"
 	  },
@@ -32,7 +32,7 @@
 		"onLanguage:cg",
 		"onCommand:hlsl.linter.setifdefs"
 	],
-	"main": "./out/extension",
+	"main": "./out/extension.js",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",

@@ -283,6 +283,9 @@ export default class HLSLLintingProvider implements vscode.Disposable {
     }
 
     public activate(subscriptions: vscode.Disposable[]): void {
+        
+        subscriptions.push(vscode.commands.registerCommand('hlsl.linter.setifdefs', this.setIfdefs.bind(this)));
+
         subscriptions.push(this);
         vscode.workspace.onDidChangeConfiguration(this.loadConfiguration, this, subscriptions);
         this.loadConfiguration();
@@ -294,11 +297,12 @@ export default class HLSLLintingProvider implements vscode.Disposable {
 
         vscode.workspace.textDocuments.forEach(this.triggerLint, this);
 
-        subscriptions.push(vscode.commands.registerCommand('hlsl.linter.setifdefs', this.setIfdefs.bind(this)));
     }
 
-    private setIfdefs(ifdefs: string) {
+    public setIfdefs(ifdefs: string) {
+        
         this.ifdefs = JSON.parse(ifdefs);
+
         vscode.workspace.textDocuments.forEach(this.triggerLint, this);
     }
 
@@ -522,6 +526,8 @@ export default class HLSLLintingProvider implements vscode.Disposable {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+    //context.subscriptions.push(//this.setIfdefs.bind(this)));
+
     let linter = new HLSLLintingProvider();
     linter.activate(context.subscriptions);    
 }
